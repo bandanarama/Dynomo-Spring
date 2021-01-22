@@ -20,9 +20,11 @@ public class Expense {
     @Id
     private Long id;
 
+    private String description;
+
     private Instant expenseDate;
 
-    private String Description;
+    private String location;
 
     @ManyToOne
     private Category category;
