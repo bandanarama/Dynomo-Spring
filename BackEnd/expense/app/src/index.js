@@ -2,12 +2,13 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import reportWebVitals from './reportWebVitals';
-import Category from './Category';
+import Home from './Home';
+//import 'bootstrap/dist/css/bootstrap.class';
 
 
 ReactDOM.render(
   <React.StrictMode>
-    <Category />
+    <Home />
   </React.StrictMode>,
   document.getElementById('root')
 );

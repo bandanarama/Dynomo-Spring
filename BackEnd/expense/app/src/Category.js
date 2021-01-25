@@ -9,7 +9,7 @@ class Category extends Component {
      async componentDidMount() {
          const response = await fetch('/api/categories')
          const body = await response.json();
-         this.setState({Categories: body, isLoading: false});
+         this.setState({Categories :body, isLoading: false});
      }
 
     render() { 
