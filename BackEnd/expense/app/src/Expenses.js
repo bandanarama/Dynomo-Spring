@@ -1,15 +1,15 @@
 import React, { Component } from 'react';
 import AppNav from './AppNav';
 
-class Home extends Component {
+class Expenses extends Component {
     state = {  }
     render() { 
-        return (
+        return ( 
             <div>
                 <AppNav/>
             </div>
-             );
+         );
     }
 }
  
-export default Home;
+export default Expenses;
