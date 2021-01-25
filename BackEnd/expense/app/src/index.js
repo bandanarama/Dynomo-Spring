@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import reportWebVitals from './reportWebVitals';
 import Home from './Home';
-//import 'bootstrap/dist/css/bootstrap.class';
+import 'bootstrap/dist/css/bootstrap.css';
 
 
 ReactDOM.render(
