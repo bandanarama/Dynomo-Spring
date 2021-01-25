@@ -7,6 +7,7 @@ class Home extends Component {
         return (
             <div>
                 <AppNav/>
+                <h2>Hi</h2>
             </div>
              );
     }
