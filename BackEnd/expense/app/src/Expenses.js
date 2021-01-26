@@ -3,7 +3,7 @@ import AppNav from './AppNav';
 import DatePicker from 'react-datepicker';
 import './App.css';
 import "react-datepicker/dist/react-datepicker.css";
-import {Container, Form, FormGroup, Label, Button, Input} from 'reactstrap';
+import {Container, Form, FormGroup, Label, Button, Input, Table} from 'reactstrap';
 import {Link} from 'react-router-dom';
 
 class Expenses extends Component {
@@ -28,11 +28,24 @@ class Expenses extends Component {
 
         this.state = {
             date: new Date(),
-            isLoading: true,
+            isLoading: false,
             categories:[],
             expenses: [],
             item: this.emptyItem
         }
+    }
+
+    async remove(id) {
+        await fetch(`/api/expenses/${id}`, {
+            method: 'DELETE', 
+            headers: {
+                'Accept' : 'application/json',
+                'Content-Type': 'application/json'
+            }
+        }).then(() => {
+            let updatedExpenses = [...this.state.expenses].filter(i => i.id !== id);
+            this.setState({expenses : updatedExpenses});
+        });
     }
 
      async componentDidMount() {
@@ -40,8 +53,8 @@ class Expenses extends Component {
         const body = await response.json();
         this.setState({categories: body, isLoading: false});
 
-        const responseExp = await fetch('/api/categories');
-        const bodyExp = await response.json();
+        const responseExp = await fetch('/api/expenses');
+        const bodyExp = await responseExp.json();
         this.setState({expenses: bodyExp, isLoading: false});
 
      }
@@ -58,6 +71,17 @@ class Expenses extends Component {
                 <option id={category.id}>
                     {category.name}
                 </option>
+                )
+        
+        let rows = 
+            expenses.map( expense =>
+                <tr key={expense.id}>
+                    <td>{expense.description}</td>
+                    <td>{expense.location}</td>
+                    <td>{expense.date}</td>
+                    <td>{expense.category.name}</td>
+                    <td><Button size="sm" color="danger" onClick={() => this.remove(expense.id)}>Delete</Button></td>
+                </tr>
                 )
 
         return ( 
@@ -78,7 +102,6 @@ class Expenses extends Component {
                             <select>
                                 {optionList}
                             </select>
-                            <Input type="text" name="category" id="category" onChange={this.handleChange}/>
                         </FormGroup>
 
                         <FormGroup>
@@ -97,6 +120,25 @@ class Expenses extends Component {
                         </FormGroup>
 
                     </Form>
+                </Container>
+
+                {''}
+                <Container>
+                    <h3>Expense List</h3>
+                    <Table className="mt-4">
+                        <thead>
+                            <tr>
+                                <th width="20%">Description</th>
+                                <th width="10%">Location</th>
+                                <th width="10%">Date</th>
+                                <th width="10%">Category</th>
+                                <th width="10%">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {rows}
+                        </tbody>
+                    </Table>
                 </Container>
             </div>
          );
