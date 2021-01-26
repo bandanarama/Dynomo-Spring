@@ -7,7 +7,9 @@ class Home extends Component {
         return (
             <div>
                 <AppNav/>
-                <h2>Hi</h2>
+                <h2>
+                    Welcome to my Expense Tracker Application
+                </h2>
             </div>
              );
     }
