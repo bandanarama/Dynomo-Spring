@@ -7,25 +7,58 @@ import {Container, Form, FormGroup, Label, Button, Input} from 'reactstrap';
 import {Link} from 'react-router-dom';
 
 class Expenses extends Component {
-    state = { 
-        date: new Date(),
-        isLoading: true,
-        expenses: [],
-        categories: []
-     }
+    // "id": 100,
+    // "description": "New York Trip",
+    // "expenseDate": "2020-06-16T17:00:00Z",
+    // "location": "New York",
+    // "category": {
+    //   "id": 1,
+    //   "name": "Travel"
+    
+    emptyItem = {
+        id: '103',
+        description:'' ,
+        expenseDate: new Date(),
+        location: '' ,
+        categories: [1, 'Travel']
+    }
+
+    constructor(props) {
+        super(props)
+
+        this.state = {
+            date: new Date(),
+            isLoading: true,
+            categories:[],
+            expenses: [],
+            item: this.emptyItem
+        }
+    }
 
      async componentDidMount() {
         const response = await fetch('/api/categories');
         const body = await response.json();
-
         this.setState({categories: body, isLoading: false});
+
+        const responseExp = await fetch('/api/categories');
+        const bodyExp = await response.json();
+        this.setState({expenses: bodyExp, isLoading: false});
+
      }
     render() { 
         const title = <h3>Add Expense</h3>
-        const {categories, isLoading} = this.state;
+        const {categories} = this.state;
+        const {expenses, isLoading} = this.state;
 
         if(isLoading) 
             return(<div>Loading.....</div>)
+
+        let optionList =
+            categories.map( category =>
+                <option id={category.id}>
+                    {category.name}
+                </option>
+                )
 
         return ( 
             <div>
@@ -43,7 +76,7 @@ class Expenses extends Component {
                         <FormGroup>
                             <Label for="category">Category</Label>
                             <select>
-                                
+                                {optionList}
                             </select>
                             <Input type="text" name="category" id="category" onChange={this.handleChange}/>
                         </FormGroup>
