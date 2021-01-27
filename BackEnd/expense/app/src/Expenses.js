@@ -33,7 +33,26 @@ class Expenses extends Component {
             expenses: [],
             item: this.emptyItem
         }
+        this.handleSubmit= this.handleSubmit.bind(this);
     }
+
+    async handleSubmit(event){
+     
+        const item = this.state.item;
+      
+  
+        await fetch(`/api/expenses`, {
+          method : 'POST',
+          headers : {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+          },
+          body : JSON.stringify(item),
+        });
+        
+        event.preventDefault();
+        this.props.history.push("/expenses");
+      }
 
     async remove(id) {
         await fetch(`/api/expenses/${id}`, {
@@ -68,7 +87,7 @@ class Expenses extends Component {
 
         let optionList =
             categories.map( category =>
-                <option id={category.id}>
+                <option id={category.id} key={category.id}>
                     {category.name}
                 </option>
                 )
@@ -90,7 +109,8 @@ class Expenses extends Component {
 
                 <Container>
                     {title}
-                    <Form>
+                    
+                    <Form onSubmit={this.handleSubmit}>
 
                         <FormGroup>
                             <Label for="title">Title</Label>
