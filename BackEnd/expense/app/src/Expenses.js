@@ -5,6 +5,7 @@ import './App.css';
 import "react-datepicker/dist/react-datepicker.css";
 import {Container, Form, FormGroup, Label, Button, Input, Table} from 'reactstrap';
 import {Link} from 'react-router-dom';
+import Moment from 'react-moment';
 
 class Expenses extends Component {
     // "id": 100,
@@ -16,11 +17,11 @@ class Expenses extends Component {
     //   "name": "Travel"
     
     emptyItem = {
-        id: '103',
+        id: '104',
         description:'' ,
         expenseDate: new Date(),
         location: '' ,
-        categories: [1, 'Travel']
+        categories: {id: 1, name:'Travel'}
     }
 
     constructor(props) {
@@ -34,13 +35,14 @@ class Expenses extends Component {
             item: this.emptyItem
         }
         this.handleSubmit= this.handleSubmit.bind(this);
+        this.handleChange=this.handleChange.bind(this);
+        this.handleDateChange=this.handleDateChange.bind(this);
     }
 
     async handleSubmit(event){
      
         const item = this.state.item;
       
-  
         await fetch(`/api/expenses`, {
           method : 'POST',
           headers : {
@@ -52,6 +54,22 @@ class Expenses extends Component {
         
         event.preventDefault();
         this.props.history.push("/expenses");
+      }
+
+      handleChange(event) {
+          const target = event.target;
+          const value = target.value;
+          const name = target.name;
+          let item = {...this.state.item};
+          item[name] = value;
+          this.setState({item});
+          console.log(this.state);
+      }
+
+      handleDateChange(date) {
+          let item={...this.state.item};
+          item.expenseDate=date;
+          this.setState({item});
       }
 
     async remove(id) {
@@ -97,7 +115,7 @@ class Expenses extends Component {
                 <tr key={expense.id}>
                     <td>{expense.description}</td>
                     <td>{expense.location}</td>
-                    <td>{expense.date}</td>
+                    <td><Moment date ={expense.expenseDate} format="YYYY/MM/DD"/></td>
                     <td>{expense.category.name}</td>
                     <td><Button size="sm" color="danger" onClick={() => this.remove(expense.id)}>Delete</Button></td>
                 </tr>
@@ -113,8 +131,8 @@ class Expenses extends Component {
                     <Form onSubmit={this.handleSubmit}>
 
                         <FormGroup>
-                            <Label for="title">Title</Label>
-                            <Input type="text" name="title" id="title" onChange={this.handleChange}/>
+                            <Label for="description">Title</Label>
+                            <Input type="description" name="description" id="description" onChange={this.handleChange}/>
                         </FormGroup>
 
                         <FormGroup>
@@ -125,8 +143,8 @@ class Expenses extends Component {
                         </FormGroup>
 
                         <FormGroup>
-                            <Label for="expenseDate">Expense Date</Label>
-                            <DatePicker selected={this.state.date} onChange={this.handleChange}/>
+                            <Label for="expenseDate">Date</Label>
+                            <DatePicker selected={this.state.item.expenseDate} onChange={this.handleChange}/>
                         </FormGroup>
 
                         <FormGroup>
